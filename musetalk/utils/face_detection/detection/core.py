@@ -5,28 +5,20 @@ import numpy as np
 import torch
 import cv2
 
-
 class FaceDetector(object):
     def __init__(self, device, verbose):
         self.device = device
         self.verbose = verbose
         if verbose and 'cpu' in device:
-            logger = logging.getLogger(__name__)
-            logger.warning("Detection running on CPU, this may be potentially slow.")
+            logging.getLogger(__name__).warning('Detection running on CPU, this may be potentially slow.')
         if 'cpu' not in device and 'cuda' not in device:
-            if verbose:
-                logger.error("Expected values for device are: {cpu, cuda} but got: %s", device)
             raise ValueError
 
     def detect_from_image(self, tensor_or_path):
         raise NotImplementedError
 
     def detect_from_directory(self, path, extensions=['.jpg', '.png'], recursive=False, show_progress_bar=True):
-        if self.verbose:
-            logger = logging.getLogger(__name__)
         if len(extensions) == 0:
-            if self.verbose:
-                logger.error("Expected at list one extension, but none was received.")
             raise ValueError
         additional_pattern = '/**/*' if recursive else '/*'
         files = []
@@ -40,11 +32,9 @@ class FaceDetector(object):
     @property
     def reference_scale(self):
         raise NotImplementedError
-
     @property
     def reference_x_shift(self):
         raise NotImplementedError
-
     @property
     def reference_y_shift(self):
         raise NotImplementedError
@@ -57,4 +47,5 @@ class FaceDetector(object):
             return tensor_or_path.cpu().numpy()[..., ::-1].copy() if not rgb else tensor_or_path.cpu().numpy()
         elif isinstance(tensor_or_path, np.ndarray):
             return tensor_or_path[..., ::-1].copy() if not rgb else tensor_or_path
-        raise TypeError
+        else:
+            raise TypeError

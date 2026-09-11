@@ -12,12 +12,21 @@ from musetalk.loss import resnet as ResNet
 MODEL_URL = "https://github.com/claudio-unipv/vggface-pytorch/releases/download/v0.1/vggface-9d491dd7c30312.pth"
 VGG_FACE_PATH = '/apdcephfs_cq8/share_1367250/zhentaoyu/Driving/00_VASA/00_data/models/pretrain_models/resnet50_ft_weight.pkl'
 
+# It was 93.5940, 104.7624, 129.1863 before dividing by 255
 MEAN_RGB = [
     0.367035294117647,
     0.41083294117647057,
     0.5066129411764705
 ]
 def load_state_dict(model, fname):
+    """
+    Set parameters converted from Caffe models authors of VGGFace2 provide.
+    See https://www.robots.ox.ac.uk/~vgg/data/vgg_face2/.
+
+    Arguments:
+        model: model
+        fname: file name of parameters converted from a Caffe model, assuming the file format is Pickle.
+    """
     with open(fname, 'rb') as f:
         weights = pickle.load(f, encoding='latin1')
 
@@ -102,10 +111,8 @@ class Vgg19(torch.nn.Module):
             self.slice4.add_module(str(x), vgg_pretrained_features[x])
         for x in range(21, 30):
             self.slice5.add_module(str(x), vgg_pretrained_features[x])
-
         self.mean = torch.nn.Parameter(data=torch.Tensor(np.array([0.485, 0.456, 0.406]).reshape((1, 3, 1, 1))), requires_grad=False)
         self.std = torch.nn.Parameter(data=torch.Tensor(np.array([0.229, 0.224, 0.225]).reshape((1, 3, 1, 1))), requires_grad=False)
-
         if not requires_grad:
             for param in self.parameters():
                 param.requires_grad = False
@@ -130,9 +137,7 @@ class AntiAliasInterpolation2d(nn.Module):
         kernel_size = [kernel_size, kernel_size]
         sigma = [sigma, sigma]
         kernel = 1
-        meshgrids = torch.meshgrid([
-            torch.arange(size, dtype=torch.float32) for size in kernel_size
-        ])
+        meshgrids = torch.meshgrid([torch.arange(size, dtype=torch.float32) for size in kernel_size])
         for size, std, mgrid in zip(kernel_size, sigma, meshgrids):
             mean = (size - 1) / 2
             kernel *= torch.exp(-(mgrid - mean) ** 2 / (2 * std ** 2))
@@ -142,16 +147,14 @@ class AntiAliasInterpolation2d(nn.Module):
         self.register_buffer('weight', kernel)
         self.groups = channels
         self.scale = scale
-        inv_scale = 1 / scale
-        self.int_inv_scale = int(inv_scale)
+        self.int_inv_scale = int(1 / scale)
 
     def forward(self, input):
         if self.scale == 1.0:
             return input
         out = F.pad(input, (self.ka, self.kb, self.ka, self.kb))
         out = F.conv2d(out, weight=self.weight, groups=self.groups)
-        out = out[:, :, ::self.int_inv_scale, ::self.int_inv_scale]
-        return out
+        return out[:, :, ::self.int_inv_scale, ::self.int_inv_scale]
 
 class ImagePyramide(torch.nn.Module):
     def __init__(self, scales, num_channels):

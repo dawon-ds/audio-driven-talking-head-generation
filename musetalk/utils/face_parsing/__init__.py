@@ -53,15 +53,11 @@ class FaceParsing():
         return net
 
     def image_preprocess(self):
-        return transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-        ])
+        return transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
 
-    def __call__(self, image, size=(512, 512), mode="raw"):
+    def __call__(self, image, size=(512, 512), mode='raw'):
         if isinstance(image, str):
             image = Image.open(image)
-        width, height = image.size
         with torch.no_grad():
             image = image.resize(size, Image.BILINEAR)
             img = self.preprocess(image)
@@ -71,10 +67,10 @@ class FaceParsing():
                 img = torch.unsqueeze(img, 0)
             out = self.net(img)[0]
             parsing = out.squeeze(0).cpu().numpy().argmax(0)
-            if mode == "neck":
+            if mode == 'neck':
                 parsing[np.isin(parsing, [1, 11, 12, 13, 14])] = 255
                 parsing[np.where(parsing!=255)] = 0
-            elif mode == "jaw":
+            elif mode == 'jaw':
                 face_region = np.isin(parsing, [1])*255
                 face_region = face_region.astype(np.uint8)
                 original_dilated = cv2.dilate(face_region, self.kernel, iterations=1)
