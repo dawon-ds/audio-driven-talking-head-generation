@@ -88,7 +88,7 @@ sh train.sh stage1
 sh train.sh stage2
 ```
 
-`train.py` is launched through Hugging Face Accelerate using `configs/training/accelerate.yaml` and the stage-specific training configurations under `configs/training/`.
+`train.sh` launches `train.py` through Hugging Face Accelerate using `configs/training/accelerate.yaml` and the selected stage configuration (`stage1.yaml` or `stage2.yaml`).
 
 ## Inference
 
