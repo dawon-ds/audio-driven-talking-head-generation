@@ -35,23 +35,28 @@ The repository includes:
 ## Pipeline
 
 ```text
-Reference Video + Audio
-        ↓
-Face Detection / DWPose Preprocessing
-        ↓
-Whisper Audio Features
-        ↓
-VAE Latent + MuseTalk UNet
-        ↓
-Generated Mouth / Face Region
-        ↓
-Face Parsing & Blending
-        ↓
-Frame Sequence + Audio Composition
-        ↓
-Talking-Head Video
-        ↓
-Gradio Preview
+Reference Video                         Audio
+      ↓                                  ↓
+Face Detection / DWPose            Audio Preprocessing
+      ↓                                  ↓
+Face Crop / Latent Encoding        Whisper Features
+      └───────────────┬──────────────────┘
+                      ↓
+             MuseTalk UNet Inference
+                      ↓
+             VAE Latent Decoding
+                      ↓
+        Generated Mouth / Face Region
+                      ↓
+            Face Parsing & Blending
+                      ↓
+          Frame Sequence Composition
+                      ↓
+               Audio Muxing
+                      ↓
+           Talking-Head Video
+                      ↓
+              Gradio Preview
 ```
 
 ## Experimental Lip-Centric Architecture
