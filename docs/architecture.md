@@ -18,37 +18,54 @@ Inference utilities support both MuseTalk v1.0 and v1.5 model layouts.
 
 In addition to the implemented MuseTalk pipeline, the project explored a lip-centric refinement design targeting a **96×96 lip ROI**.
 
-The experimental design combined:
+The experimental design combines:
 
-- reference visual lip information,
+- reference lip frames encoded into a latent representation by a frozen VAE,
 - Whisper-based audio features,
-- latent image representation from a frozen VAE,
-- cross-attention between visual and audio features,
-- a residual latent update predicted by an ADLip Generator concept.
+- an ADLip Generator that predicts an audio-driven latent change,
+- Spatial Cross-Attention between the reference latent and audio features,
+- Temporal Attention across the lip sequence,
+- a residual latent update followed by frozen VAE decoding.
 
-The proposed residual formulation was:
+The proposed residual formulation is:
 
 ```text
 Z_out = Z_ref + αΔ
 ```
 
-where `Δ` represents an audio-conditioned latent adjustment for the lip region.
+where `Δ` represents the predicted audio-driven latent change and `α` controls its scale.
 
-## LipCrossAttention Design
+## Spatial Cross-Attention Design
 
-The proposed LipCrossAttention component used:
+The proposed Spatial Cross-Attention component uses:
 
-- visual latent features as **query**,
-- audio features as **key/value**.
+- the reference visual latent `Z_ref` as the **query**,
+- Whisper audio features as **key/value** inputs.
 
-This design was intended to let the lip representation attend to temporally relevant speech information.
+This is followed by Temporal Attention and a feed-forward network inside the ADLip Generator.
 
 ## Synchronization Design
 
-The implemented training code includes SyncNet-based synchronization losses. Project materials also explored an additional frozen SyncNet-style contrastive supervision design using matched and mismatched audio-video pairs.
+The implemented MuseTalk training code includes SyncNet-based synchronization supervision.
 
-## Training Objectives
+The experimental refinement design additionally uses a SyncLT-style contrastive objective with:
 
-The repository training code supports reconstruction, perceptual, adversarial, feature-matching, and synchronization-related losses through the project training configurations and loss modules.
+- generated lip video,
+- matched positive audio,
+- mismatched negative audio.
 
-The lip-centric refinement materials additionally describe objectives such as latent L1 loss, silence loss, delta regularization, and TTA-related synchronization supervision. These are documented here as experimental design elements and should not be interpreted as standalone implemented modules unless corresponding code is present in the repository.
+The synchronization network is used to encourage stronger audio-lip alignment through contrastive supervision.
+
+## Experimental Training Objectives
+
+The final lip-centric design shown in `images/architecture.png` includes:
+
+- **Latent Reconstruction Loss**,
+- **Same Identity Loss**,
+- **Different Identity Loss**,
+- **Delta Regularization**,
+- **SyncLT Contrastive Loss**.
+
+These losses are combined into the total training objective and backpropagated to update the trainable refinement components.
+
+The diagram documents the project's proposed refinement architecture. The current repository primarily contains the MuseTalk training/inference implementation and supporting modules, so experimental components should not be interpreted as standalone implemented modules unless corresponding source code is present.
