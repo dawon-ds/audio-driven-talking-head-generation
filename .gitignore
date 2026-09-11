@@ -1,0 +1,26 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.env
+.ipynb_checkpoints/
+.DS_Store
+*.log
+
+# Model / experiment artifacts
+checkpoints/
+weights/
+runs/
+outputs/
+results/
+*.pt
+*.pth
+*.ckpt
+
+# Generated media
+*.mp4
+*.mov
+*.avi
+*.wav
+*.mp3
