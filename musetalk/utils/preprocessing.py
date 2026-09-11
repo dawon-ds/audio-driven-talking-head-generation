@@ -1,5 +1,5 @@
 import sys
-from face_detection import FaceAlignment,LandmarksType
+from musetalk.utils.face_detection import FaceAlignment,LandmarksType
 from os import listdir, path
 import subprocess
 import numpy as np
@@ -73,7 +73,6 @@ def get_bbox_range(img_list,upperbondrange =0):
     text_range=f"Total frame:「{len(frames)}」 Manually adjust range : [ -{int(sum(average_range_minus) / len(average_range_minus))}~{int(sum(average_range_plus) / len(average_range_plus))} ] , the current value: {upperbondrange}"
     return text_range
     
-
 def get_landmark_and_bbox(img_list,upperbondrange =0):
     frames = read_imgs(img_list)
     batch_size_fa = 1
