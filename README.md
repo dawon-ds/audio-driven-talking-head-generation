@@ -192,5 +192,5 @@ FFmpeg is also required separately at the system level.
 ## Notes
 
 - Model checkpoints, datasets, generated videos, uploaded media, caches, and other large runtime artifacts are excluded through `.gitignore`.
-- Reproducing training or inference additionally requires the appropriate MuseTalk weights, compatible CUDA/runtime dependencies, and system-level FFmpeg.
-- Some runtime dependencies in the pose/detection stack may require environment-specific version compatibility beyond `pip install -r requirements.txt`.
+- Reproducing training or inference requires the required pretrained model weights, a compatible CUDA/runtime environment, and system-level FFmpeg.
+- Pose and detection dependencies such as MMPose/MMDetection may require environment-specific version compatibility.
