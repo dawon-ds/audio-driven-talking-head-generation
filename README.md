@@ -8,12 +8,13 @@ The project explored a lip-centric refinement strategy around a **96×96 mouth R
 
 ## Project Overview
 
-- **Period:** March–June 2026
-- **Team:** 4 members
-- **Base model:** MuseTalk
+- **Period:** 2026
 - **Task:** Audio-driven talking-head generation
-- **Focus:** Lip-sync improvement and inference usability
-- **Core components:** MuseTalk baseline, Lip-Centric refinement, ADLip Generator, SyncNet supervision, end-to-end inference, web demo
+- **Base Model:** MuseTalk v1.0
+- **Approach:** Lip-Centric refinement with ADLip Generator
+- **Audio Features:** Whisper
+- **Synchronization:** SyncNet / SyncLT supervision
+- **Framework:** PyTorch
 
 ## Problem
 
