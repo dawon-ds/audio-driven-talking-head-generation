@@ -1,14 +1,22 @@
 # Architecture
 
-## Baseline
+## Implemented MuseTalk Pipeline
 
-The project used **MuseTalk v1.0** as the baseline for audio-driven talking-head generation.
+The repository contains the MuseTalk-based training and inference pipeline used for audio-driven talking-head generation, including:
 
-The improvement stage focused on the mouth area rather than redesigning the complete generation pipeline.
+- Whisper-based audio feature extraction,
+- VAE latent encoding and decoding,
+- audio-conditioned UNet generation,
+- face detection and DWPose preprocessing,
+- face parsing and blending,
+- SyncNet-based synchronization supervision,
+- normal and realtime inference.
 
-## Lip-Centric Refinement
+Inference utilities support both MuseTalk v1.0 and v1.5 model layouts.
 
-A **96×96 lip ROI** was used as the primary refinement target.
+## Lip-Centric Refinement Design
+
+In addition to the implemented MuseTalk pipeline, the project explored a lip-centric refinement design targeting a **96×96 lip ROI**.
 
 The experimental design combined:
 
@@ -16,9 +24,9 @@ The experimental design combined:
 - Whisper-based audio features,
 - latent image representation from a frozen VAE,
 - cross-attention between visual and audio features,
-- a residual latent update predicted by the ADLip Generator.
+- a residual latent update predicted by an ADLip Generator concept.
 
-The core residual formulation was:
+The proposed residual formulation was:
 
 ```text
 Z_out = Z_ref + αΔ
@@ -26,29 +34,21 @@ Z_out = Z_ref + αΔ
 
 where `Δ` represents an audio-conditioned latent adjustment for the lip region.
 
-## Cross-Attention
+## LipCrossAttention Design
 
-The LipCrossAttention component used:
+The proposed LipCrossAttention component used:
 
 - visual latent features as **query**,
 - audio features as **key/value**.
 
-This structure was intended to let the lip representation selectively attend to temporally relevant speech information.
+This design was intended to let the lip representation attend to temporally relevant speech information.
 
-## Synchronization Supervision
+## Synchronization Design
 
-A frozen SyncNet-style model was used as an auxiliary supervision mechanism.
+The implemented training code includes SyncNet-based synchronization losses. Project materials also explored an additional frozen SyncNet-style contrastive supervision design using matched and mismatched audio-video pairs.
 
-Matched and mismatched audio-video pairs were used to provide contrastive synchronization guidance, encouraging stronger correspondence between generated lip motion and the speech signal.
+## Training Objectives
 
-## Training Losses
+The repository training code supports reconstruction, perceptual, adversarial, feature-matching, and synchronization-related losses through the project training configurations and loss modules.
 
-The project materials describe the following objectives:
-
-- latent L1 loss,
-- silence loss,
-- delta regularization,
-- SyncNet synchronization loss,
-- TTA-related synchronization supervision.
-
-The exact weight configuration is not reproduced here unless directly supported by the archived project materials.
+The lip-centric refinement materials additionally describe objectives such as latent L1 loss, silence loss, delta regularization, and TTA-related synchronization supervision. These are documented here as experimental design elements and should not be interpreted as standalone implemented modules unless corresponding code is present in the repository.
