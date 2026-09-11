@@ -20,19 +20,7 @@ The project focuses on improving audio-visual lip synchronization and building a
 
 ## Implementation
 
-The implementation includes:
-
-- MuseTalk model loading and inference
-- Whisper-based audio feature extraction
-- face detection and DWPose landmark preprocessing
-- face parsing and mouth-region blending
-- VAE latent encoding and decoding
-- audio-conditioned UNet inference
-- SyncNet-based synchronization loss during training
-- L1, VGG, GAN, mouth-GAN, feature-matching, and synchronization loss support
-- normal and realtime inference scripts
-- stage-based training configuration
-- Gradio web interface for parameter adjustment, preview, and final generation
+The implementation includes MuseTalk model loading and inference, Whisper-based audio feature extraction, face detection and DWPose landmark preprocessing, face parsing and mouth-region blending, VAE latent encoding/decoding, audio-conditioned UNet inference, SyncNet-based synchronization loss, stage-based training configuration, normal/realtime inference scripts, and a Gradio web demo.
 
 ## Pipeline
 
@@ -58,8 +46,6 @@ Gradio Preview
 
 ## Training
 
-`train.py` provides the training loop using Hugging Face Accelerate. Depending on the configuration, the training pipeline supports L1 reconstruction loss, VGG perceptual loss, GAN loss, mouth-region GAN loss, feature-matching loss, SyncNet-based audio-visual synchronization loss, adapted synchronization weighting, validation, and checkpoint saving.
-
 ```bash
 sh train.sh stage1
 sh train.sh stage2
@@ -72,15 +58,11 @@ sh inference.sh v1.5 normal
 sh inference.sh v1.5 realtime
 ```
 
-The Python implementations are located in `scripts/inference.py` and `scripts/realtime_inference.py`.
-
 ## Web Demo
 
 ```bash
 python app.py
 ```
-
-The demo provides audio and reference-video upload, face bounding-box adjustment, face parsing/blending parameters, first-frame inpainting preview, and end-to-end talking-head video generation.
 
 ## Model Weights
 
@@ -100,21 +82,12 @@ download_weights.bat
 musetalk-lipsync-improvement/
 ├── app.py
 ├── train.py
-├── test_ffmpeg.py
 ├── requirements.txt
-├── train.sh
-├── inference.sh
-├── download_weights.sh
-├── download_weights.bat
-├── entrypoint.sh
 ├── configs/
 ├── scripts/
 ├── musetalk/
 │   ├── data/
-│   │   ├── dataset.py
-│   │   └── sample_method.py
 │   ├── loss/
-│   │   └── vgg_face.py
 │   ├── models/
 │   └── utils/
 │       ├── dwpose/
