@@ -1,26 +1,57 @@
+# Python
 __pycache__/
 *.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
 .venv/
 venv/
 env/
 .env
-.ipynb_checkpoints/
-.DS_Store
-*.log
 
-# Model / experiment artifacts
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs / experiment tracking
+*.log
+runs/
+tensorboard/
+mlruns/
+wandb/
+
+# Model weights / checkpoints
+models/
 checkpoints/
 weights/
-runs/
 outputs/
+output/
 results/
 *.pt
 *.pth
 *.ckpt
+*.bin
+*.safetensors
+
+# Data / uploaded files
+data/
+uploads/
+.gradio/
 
 # Generated media
 *.mp4
 *.mov
 *.avi
+*.mkv
 *.wav
 *.mp3
+*.flac
+
+# Temporary files
+temp.mp4
+*.pkl
