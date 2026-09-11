@@ -62,11 +62,12 @@ The project also explored a lip-centric refinement architecture operating on a *
 
 Key design elements include:
 
-- **ADLip Generator** for predicting audio-conditioned lip latent changes
-- **LipCrossAttention** with visual latent queries and audio features as key/value inputs
-- **Residual latent update** to preserve reference-frame information while modifying the lip region
-- **Latent-space losses** for reconstruction and regularization
-- **SyncLT / SyncNet-based synchronization supervision** for audio-visual alignment
+- **ADLip Generator** for predicting an audio-conditioned latent change `Δ`
+- **Spatial Cross-Attention** using the reference latent as the query and Whisper audio features as key/value inputs
+- **Temporal Attention** for modeling short-range temporal dependencies across the lip sequence
+- **Residual latent update** using `Z_out = Z_ref + αΔ`
+- **Latent-space objectives** including latent reconstruction, identity-aware losses, and delta regularization
+- **SyncLT-style contrastive lip-sync supervision** using matched and mismatched audio segments
 
 The diagram above represents the project's **experimental lip-sync improvement design**. The repository's executable code primarily contains the MuseTalk training/inference pipeline and supporting modules; the proposed refinement components are documented as experimental design elements where no standalone implementation module is present.
 
@@ -79,7 +80,7 @@ sh train.sh stage1
 sh train.sh stage2
 ```
 
-`train.py` is launched through Hugging Face Accelerate and uses the stage-specific configurations under `configs/training/`.
+`train.py` is launched through Hugging Face Accelerate using `configs/training/accelerate.yaml` and the stage-specific training configurations under `configs/training/`.
 
 ## Inference
 
@@ -145,6 +146,11 @@ musetalk-lipsync-improvement/
 │   │   ├── normal.yaml
 │   │   └── realtime.yaml
 │   └── training/
+│       ├── accelerate.yaml
+│       ├── preprocess.yaml
+│       ├── stage1.yaml
+│       ├── stage2.yaml
+│       └── syncnet.yaml
 ├── scripts/
 │   ├── inference.py
 │   ├── preprocess.py
