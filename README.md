@@ -92,21 +92,14 @@ sh train.sh stage2
 
 ## Inference
 
-Normal and realtime inference support MuseTalk v1.0 and v1.5 model layouts.
+`inference.sh` supports MuseTalk v1.0 and v1.5 in both normal and realtime inference modes.
 
 ```bash
 sh inference.sh v1.5 normal
 sh inference.sh v1.5 realtime
 ```
 
-The Python entry points are:
-
-```text
-scripts/inference.py
-scripts/realtime_inference.py
-```
-
-Normal inference uses `configs/inference/normal.yaml`; realtime inference uses `configs/inference/realtime.yaml`.
+`inference.sh` selects the corresponding Python entry point and configuration: `scripts/inference.py` with `configs/inference/normal.yaml` for normal inference, or `scripts/realtime_inference.py` with `configs/inference/realtime.yaml` for realtime inference.
 
 ## Web Demo
 
