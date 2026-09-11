@@ -20,8 +20,8 @@ if [ "$mode" != "normal" ] && [ "$mode" != "realtime" ]; then
 fi
 
 if [ "$mode" = "normal" ]; then
-    config_path="./configs/inference/test.yaml"
-    result_dir="./results/test"
+    config_path="./configs/inference/normal.yaml"
+    result_dir="./results/normal"
 else
     config_path="./configs/inference/realtime.yaml"
     result_dir="./results/realtime"
@@ -56,8 +56,7 @@ cmd_args="--inference_config $config_path \
 
 if [ "$mode" = "realtime" ]; then
     cmd_args="$cmd_args \
-    --fps 25 \
-    --version $version_arg"
+    --fps 25"
 fi
 
 python3 -m $script_name $cmd_args
