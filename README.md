@@ -127,13 +127,13 @@ download_weights.bat
 
 ## FFmpeg Check
 
-FFmpeg is required for video processing and audio-video composition. A small environment check is provided:
+FFmpeg is required for video processing and audio-video composition. `check_ffmpeg.py` can be used to verify an FFmpeg installation or a custom FFmpeg binary directory.
 
 ```bash
-python check_ffmpeg.py <ffmpeg-bin-path>
+python check_ffmpeg.py [ffmpeg-bin-path]
 ```
 
-## Repository Structure
+## Repository Structure (Key Files)
 
 ```text
 audio-driven-talking-head-generation/
