@@ -111,11 +111,15 @@ The Gradio interface provides an end-to-end workflow for reference media and aud
 
 ## Model Weights
 
-Large pretrained weights are not stored in GitHub. Download scripts are provided instead.
+Pretrained model weights are not stored in the repository. Platform-specific download scripts are provided for Linux/macOS and Windows.
+
+Linux / macOS:
 
 ```bash
 bash download_weights.sh
 ```
+
+Windows:
 
 ```bat
 download_weights.bat
