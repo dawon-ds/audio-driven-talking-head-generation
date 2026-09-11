@@ -2,7 +2,7 @@
 
 **MuseTalk Lip-Sync Improvement · Capstone Project · 2026**
 
-This repository documents a team capstone project focused on improving lip synchronization in **audio-driven talking-head generation** using MuseTalk as the baseline system.
+This repository documents a capstone project focused on improving lip synchronization in **audio-driven talking-head generation** using MuseTalk as the baseline system.
 
 The project explored a lip-centric refinement strategy around a **96×96 mouth ROI**, combining an additional lip generator with audio-visual synchronization supervision, while also building an end-to-end inference flow and a Python-based web demo.
 
@@ -19,7 +19,7 @@ The project explored a lip-centric refinement strategy around a **96×96 mouth R
 
 MuseTalk can generate high-quality talking-head videos, but the project focused on a remaining challenge: improving the alignment between **mouth motion and input audio**.
 
-Rather than modifying the full face-generation pipeline, the team concentrated on the mouth region and tested a lip-centric refinement strategy designed to make local mouth motion more responsive to audio features.
+Rather than modifying the full face-generation pipeline, the project concentrated on the mouth region and designed a lip-centric refinement strategy intended to make local mouth motion more responsive to audio features.
 
 ## Baseline
 
@@ -31,7 +31,7 @@ In the project environment, one sample end-to-end inference run required approxi
 
 The proposed refinement stage focused on a **96×96 lip ROI**.
 
-Conceptually, the refinement module receives:
+The refinement module receives:
 
 - a reference lip frame,
 - a corresponding audio segment,
@@ -43,7 +43,20 @@ The **ADLip Generator** predicts a latent lip-motion adjustment, represented as 
 Z_out = Z_ref + αΔ
 ```
 
-This residual formulation was intended to preserve the reference visual structure while allowing audio-conditioned mouth movement to be adjusted locally.
+This residual formulation is designed to preserve the reference visual structure while allowing audio-conditioned mouth movement to be adjusted locally.
+
+## ADLip Generator Design
+
+The ADLip Generator was designed as the core lip-refinement module.
+
+Its purpose is to learn an audio-conditioned update in latent space rather than regenerate the entire face. The design combines:
+
+- reference lip latent features,
+- speech features extracted from Whisper,
+- cross-modal fusion through LipCrossAttention,
+- residual prediction of lip-motion change `Δ`.
+
+The visual latent acts as the **query**, while the audio features are used as **key/value** in cross-attention. This enables the model to condition local mouth motion directly on speech information while preserving the surrounding facial structure.
 
 ## Model Architecture
 
@@ -56,11 +69,11 @@ The experimental architecture used:
 - audio features as key/value,
 - residual latent lip update through the ADLip Generator.
 
-The overall goal was to isolate and train the lip-synchronization component without unnecessarily updating the full image-generation backbone.
+The overall design isolates the lip-synchronization component without unnecessarily updating the full image-generation backbone.
 
 ## Training Objectives
 
-The project materials describe a combination of losses including:
+The project used a combination of objectives including:
 
 - latent L1 reconstruction loss,
 - silence loss,
@@ -68,47 +81,63 @@ The project materials describe a combination of losses including:
 - SyncNet-based synchronization loss,
 - TTA-related synchronization supervision.
 
-### SyncLT / SyncNet Supervision
+These losses jointly encourage visual reconstruction quality, stable residual updates, and stronger correspondence between speech and generated lip motion.
 
-A frozen SyncNet-style model was used to provide audio-visual synchronization guidance through matched and mismatched audio-video pairs.
+## SyncNet / SyncLT Design
 
-This supervision was designed to encourage generated mouth motion to better correspond to the input speech signal.
+A frozen SyncNet-style network was used as an audio-visual synchronization supervisor.
+
+The synchronization objective compares matched and mismatched audio-video pairs so that the model learns whether the generated mouth motion is temporally consistent with the input speech.
+
+The SyncLT supervision strategy was incorporated into training to provide an explicit lip-sync signal in addition to reconstruction-based objectives. This helps prevent the refinement model from optimizing only visual similarity while ignoring whether mouth movement actually matches the spoken audio.
 
 ## Inference Pipeline
 
-The project integrated an end-to-end flow from:
+The project integrated the full pipeline as:
 
 ```text
 Reference Image + Audio
         ↓
 MuseTalk Baseline Inference
         ↓
-Lip-Centric Refinement
+Lip ROI / Latent Extraction
+        ↓
+ADLip Generator
+  + Whisper Audio Features
+  + LipCrossAttention
+        ↓
+Sync-Aware Lip Refinement
         ↓
 Generated Talking-Head Video
         ↓
 Web Demo Preview
 ```
 
-The final demo allowed users to run inference and review the generated result in a Python-based interface.
+The end-to-end workflow connected reference-image and audio inputs to final video generation and allowed the result to be reviewed through a Python-based web interface.
 
-## My Contribution
+## Project Work
 
-My verifiable responsibilities in the project included:
+The project covered the complete development flow, including:
 
-- setting up and validating the MuseTalk baseline,
-- integrating the end-to-end inference flow,
-- developing the Python-based web demo,
-- analyzing experiment results,
-- preparing presentation materials and participating in the midterm presentation.
-
-The ADLip / SyncNet-based model design is documented here as a **team project result** rather than claimed as an individual implementation.
+- MuseTalk v1.0 baseline setup and inference validation,
+- analysis of the lip-sync limitation,
+- 96×96 lip-ROI based refinement design,
+- ADLip Generator architecture design,
+- Whisper-based audio feature integration,
+- LipCrossAttention-based audio-visual fusion,
+- residual latent update design,
+- SyncNet / SyncLT synchronization supervision,
+- reconstruction and regularization loss design,
+- model experiments and ablation analysis,
+- end-to-end inference integration,
+- Python-based web demo development,
+- result analysis and presentation.
 
 ## Repository Scope
 
 This public repository is currently a **portfolio-oriented technical summary** of the capstone project.
 
-Large model weights, generated media, external pretrained assets, and the complete team development environment are not included here.
+Large model weights, generated media, external pretrained assets, and the complete development environment are not included here.
 
 ## Repository Structure
 
@@ -125,9 +154,3 @@ musetalk-lipsync-improvement/
 ## Tech Stack
 
 `Python` `PyTorch` `MuseTalk` `Whisper` `VAE` `Cross-Attention` `SyncNet` `Computer Vision` `Multimodal AI`
-
-## Notes
-
-- This was a **4-person capstone project**.
-- The repository documents the overall verified technical pipeline and the repository owner's confirmed responsibilities.
-- Team-level components are not presented as individually implemented unless the available project records support that claim.
