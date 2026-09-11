@@ -54,6 +54,24 @@ Talking-Head Video
 Gradio Preview
 ```
 
+## Proposed Lip-Sync Improvement Architecture
+
+![Proposed Lip-Sync Improvement Architecture](docs/images/architecture.png)
+
+The project also explored a lip-centric refinement architecture operating on a **96×96 lip ROI**. The proposed design combines reference lip-frame latents with Whisper audio features and predicts a residual lip-latent update before VAE decoding.
+
+Key design elements include:
+
+- **ADLip Generator** for predicting audio-conditioned lip latent changes
+- **LipCrossAttention** with visual latent queries and audio features as key/value inputs
+- **Residual latent update** to preserve reference-frame information while modifying the lip region
+- **Latent-space losses** for reconstruction and regularization
+- **SyncLT / SyncNet-based synchronization supervision** for audio-visual alignment
+
+The diagram above represents the project's **experimental lip-sync improvement design**. The repository's executable code primarily contains the MuseTalk training/inference pipeline and supporting modules; the proposed refinement components are documented as experimental design elements where no standalone implementation module is present.
+
+More details are available in `docs/architecture.md`.
+
 ## Training
 
 ```bash
@@ -109,12 +127,6 @@ FFmpeg is required for video processing and audio-video composition. A small env
 python check_ffmpeg.py <ffmpeg-bin-path>
 ```
 
-## Experimental Lip-Centric Design
-
-Project materials also explored a 96×96 lip-ROI refinement design using concepts such as ADLip Generator, LipCrossAttention, residual latent updates, and additional synchronization supervision. These are documented separately as **experimental design elements** and are not presented as standalone implemented modules unless corresponding code is present in this repository.
-
-See `docs/architecture.md` for the distinction between the implemented MuseTalk pipeline and the experimental refinement design.
-
 ## Repository Structure
 
 ```text
@@ -149,7 +161,9 @@ musetalk-lipsync-improvement/
 └── docs/
     ├── architecture.md
     ├── demo.md
-    └── experiments.md
+    ├── experiments.md
+    └── images/
+        └── architecture.png
 ```
 
 ## Installation
