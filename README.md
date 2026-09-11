@@ -71,12 +71,10 @@ Key design elements include:
 - **Spatial Cross-Attention** using the reference latent as the query and Whisper audio features as key/value inputs
 - **Temporal Attention** for modeling short-range temporal dependencies across the lip sequence
 - **Residual latent update** using `Z_out = Z_ref + αΔ`
-- **Latent-space objectives** including latent reconstruction, identity-aware losses, and delta regularization
-- **SyncLT-style contrastive lip-sync supervision** using matched and mismatched audio segments
+- **Latent-space objectives:** Latent Reconstruction Loss, Same Identity Loss, Different Identity Loss, and Delta Regularization
+- **SyncLT-based contrastive lip-sync supervision** using matched and mismatched audio segments
 
-The diagram above represents the project's **experimental lip-centric design**. The repository's executable code primarily contains the MuseTalk training/inference pipeline and supporting modules; the proposed refinement components are documented as experimental design elements where no standalone implementation module is present.
-
-More details are available in `docs/architecture.md`.
+This diagram summarizes the **experimental lip-centric architecture** explored in the project. The executable pipeline in this repository is based on MuseTalk, while the refinement architecture is documented separately in `docs/architecture.md`.
 
 ## Training
 
