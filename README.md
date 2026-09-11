@@ -1,10 +1,10 @@
 # Audio-Driven Talking-Head Generation
 
-**MuseTalk Lip-Sync Improvement · 2026**
+**MuseTalk-based Talking-Head Generation · 2026**
 
 This repository contains the implementation used for an audio-driven talking-head generation project built on **MuseTalk**, including training, normal/realtime inference, preprocessing, synchronization losses, configuration files, and a **Gradio-based web demo**.
 
-The project focuses on improving audio-visual lip synchronization and building an end-to-end workflow from reference video and speech input to generated talking-head output.
+The project focuses on audio-visual lip synchronization and an end-to-end workflow from reference video and speech input to generated talking-head output.
 
 ## Project Overview
 
@@ -54,9 +54,9 @@ Talking-Head Video
 Gradio Preview
 ```
 
-## Proposed Lip-Sync Improvement Architecture
+## Experimental Lip-Centric Architecture
 
-![Proposed Lip-Sync Improvement Architecture](docs/images/architecture.png)
+![Experimental Lip-Centric Architecture](docs/images/architecture.png)
 
 The project also explored a lip-centric refinement architecture operating on a **96×96 lip ROI**. The proposed design combines reference lip-frame latents with Whisper audio features and predicts a residual lip-latent update before VAE decoding.
 
@@ -69,7 +69,7 @@ Key design elements include:
 - **Latent-space objectives** including latent reconstruction, identity-aware losses, and delta regularization
 - **SyncLT-style contrastive lip-sync supervision** using matched and mismatched audio segments
 
-The diagram above represents the project's **experimental lip-sync improvement design**. The repository's executable code primarily contains the MuseTalk training/inference pipeline and supporting modules; the proposed refinement components are documented as experimental design elements where no standalone implementation module is present.
+The diagram above represents the project's **experimental lip-centric design**. The repository's executable code primarily contains the MuseTalk training/inference pipeline and supporting modules; the proposed refinement components are documented as experimental design elements where no standalone implementation module is present.
 
 More details are available in `docs/architecture.md`.
 
@@ -131,7 +131,7 @@ python check_ffmpeg.py <ffmpeg-bin-path>
 ## Repository Structure
 
 ```text
-musetalk-lipsync-improvement/
+audio-driven-talking-head-generation/
 ├── app.py
 ├── train.py
 ├── check_ffmpeg.py
