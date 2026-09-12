@@ -2,19 +2,21 @@
 
 ## Baseline Validation
 
-The first stage of the capstone was to establish a working **MuseTalk v1.0** baseline and confirm end-to-end inference behavior in the project environment.
+The first stage of the capstone established a working **MuseTalk v1.0** baseline and confirmed end-to-end inference behavior in the project environment.
 
-One recorded sample required approximately **7 hours** for the full inference process, highlighting both computational cost and the practical need for a streamlined workflow.
+One recorded sample required approximately **7 hours** for the full inference process, highlighting both computational cost and the practical need for a more focused workflow.
 
-## Refinement Direction
+## Lip-Centric Refinement
 
-The project then explored a **lip-centric** strategy centered on the 96×96 mouth region.
+The project then implemented a **lip-centric** architecture centered on the 96×96 mouth region.
 
-The refinement idea was to preserve most of the baseline visual representation while learning a localized residual adjustment conditioned on speech audio.
+The model preserves the reference visual representation while learning an audio-conditioned residual update in latent space. The ADLip Generator combines Spatial Cross-Attention, Temporal Attention, and a Feed-Forward Network to predict the latent change applied to the reference lip representation.
 
 ## Synchronization Experiments
 
-Audio-visual synchronization supervision was introduced with a frozen SyncNet-style model. The training setup used matched and mismatched pairs so that the refinement module could learn whether a lip sequence corresponded to the input audio.
+Audio-visual synchronization supervision was integrated through SyncNet / SyncLT-style training. The setup uses matched and mismatched audio-video pairs so that the synchronization component can distinguish aligned lip motion from incorrect audio pairings.
+
+The resulting synchronization loss is combined with the lip-generation objectives during training.
 
 ## Evaluation
 
@@ -29,6 +31,6 @@ This portfolio repository does not reproduce numeric experimental values that ar
 
 ## Interpretation
 
-The experiments were treated as exploratory model-improvement work rather than evidence of a universally superior replacement for MuseTalk.
+The experiments were model-improvement work built on top of the MuseTalk baseline rather than evidence of a universally superior replacement for MuseTalk.
 
-The main contribution of the experiment phase was testing whether local lip-region refinement and explicit synchronization supervision could improve the behavior of the baseline generation pipeline while leaving most pretrained components frozen.
+The main experimental contribution was implementing and testing localized lip-region latent refinement together with explicit synchronization supervision while keeping pretrained components such as the VAE frozen.
