@@ -4,7 +4,7 @@
 
 A team project exploring audio-driven talking-head generation with MuseTalk, lip-region latent refinement, and audio-visual synchronization supervision.
 
-[Portfolio](https://app.notion.com/p/98368564df5a83fc88b9010ae5496fb7) · [Architecture](docs/architecture.md) · [Experiments](docs/experiments.md) · [Web Demo](docs/demo.md)
+[Portfolio](https://incredible-march-0ef.notion.site/98368564df5a83fc88b9010ae5496fb7) · [Architecture](docs/architecture.md) · [Experiments](docs/experiments.md) · [Web Demo](docs/demo.md)
 
 ## Project Overview
 
