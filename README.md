@@ -1,196 +1,129 @@
 # Audio-Driven Talking-Head Generation
 
-**MuseTalk-based Talking-Head Generation · 2026**
+**Data Science Capstone Design · 2026**
 
-This repository contains the implementation used for an audio-driven talking-head generation project built on **MuseTalk**, including training, normal/realtime inference, preprocessing, synchronization losses, configuration files, and a **Gradio-based web demo**.
+A team project exploring audio-driven talking-head generation with MuseTalk, lip-region latent refinement, and audio-visual synchronization supervision.
 
-The project focuses on audio-visual lip synchronization and an end-to-end workflow from reference video and speech input to generated talking-head output.
+[Portfolio](https://app.notion.com/p/98368564df5a83fc88b9010ae5496fb7) · [Architecture](docs/architecture.md) · [Experiments](docs/experiments.md) · [Web Demo](docs/demo.md)
 
 ## Project Overview
 
-- **Period:** 2026
-- **Task:** Audio-driven talking-head generation
-- **Base Model:** MuseTalk
-- **Inference Support:** MuseTalk v1.0 / v1.5
-- **Audio Features:** Whisper
-- **Synchronization:** SyncNet / SyncLT-based supervision
-- **Framework:** PyTorch
-- **Demo:** Gradio
+The project first validated end-to-end MuseTalk v1.0 inference, then explored a lip-centric architecture using an ADLip Generator and SyncLT supervision within a **96×96 lip ROI**. A Python-based Gradio demo connected media input, inference, and output preview.
 
-## Implementation
+The public repository contains MuseTalk-based training, normal/realtime inference, preprocessing, SyncNet loss utilities, and the Gradio application. **The ADLip Generator and SyncLT extension are documented in the project architecture; their implementation is not included in the current public source tree.**
 
-The repository includes:
+## Individual Contribution
 
-- MuseTalk training and inference
-- Whisper-based audio feature extraction
-- face detection and DWPose landmark preprocessing
-- face parsing and mouth-region blending
-- VAE latent encoding / decoding
-- audio-conditioned generation
-- ADLip-based lip-latent refinement
-- SyncNet / SyncLT-based synchronization supervision
-- stage-based training configurations
-- normal and realtime inference scripts
-- Gradio web demo
+My contribution focused on the **Python-based web demo** and **end-to-end inference integration** used to execute and review generated results. The lip-centric architecture is presented as team project work.
 
-## Pipeline
+## Approach
 
-```text
-Reference Video                         Audio
-      ↓                                  ↓
-Face Detection / DWPose            Audio Preprocessing
-      ↓                                  ↓
-Face Crop / Latent Encoding        Whisper Features
-      └───────────────┬──────────────────┘
-                      ↓
-             MuseTalk UNet Inference
-                      ↓
-             VAE Latent Decoding
-                      ↓
-        Generated Mouth / Face Region
-                      ↓
-            Face Parsing & Blending
-                      ↓
-          Frame Sequence Composition
-                      ↓
-               Audio Muxing
-                      ↓
-           Talking-Head Video
-                      ↓
-              Gradio Preview
-```
+1. Validate the MuseTalk v1.0 baseline from reference media and speech audio to video output.
+2. Explore localized lip refinement to condition the reference representation on speech.
+3. Use synchronization supervision to examine audio-visual alignment.
+4. Connect inference and output preview through a Gradio interface.
 
-## Lip-Centric Architecture
+### Lip-Centric Architecture
 
 ![Lip-Centric Architecture](docs/images/architecture.png)
 
-The lip-centric model operates on a **96×96 lip ROI**, combining reference lip-frame latents with Whisper audio features to generate audio-synchronized lip motion in latent space.
+The documented design encodes reference lip frames with a frozen VAE and audio with Whisper Tiny. The ADLip Generator combines spatial cross-attention, temporal attention, and feed-forward refinement to predict an audio-conditioned latent change:
 
-Key components include:
+`Z_out = Z_ref + αΔ`
 
-- **ADLip Generator** for predicting an audio-conditioned latent change `Δ`
-- **Spatial Cross-Attention** using the reference latent as the query and Whisper audio features as key/value inputs
-- **Temporal Attention** for modeling temporal dependencies across the lip sequence
-- **Feed-Forward Network** for latent refinement inside the ADLip Generator
-- **Residual latent update** using `Z_out = Z_ref + αΔ`
-- **Frozen VAE encoder/decoder** for mapping between lip frames and latent representations
-- **Latent-space objectives:** Latent Reconstruction Loss, Same Identity Loss, Different Identity Loss, and Delta Regularization
-- **SyncLT-based contrastive lip-sync supervision** using matched and mismatched audio segments
+The objectives include latent reconstruction, same/different identity losses, delta regularization, and SyncLT contrastive supervision using matched and mismatched audio segments. See [architecture details](docs/architecture.md).
 
-The ADLip Generator updates the reference lip latent according to the audio condition, while SyncLT provides synchronization supervision between the generated lip sequence and the corresponding audio. The resulting latent is decoded and pasted back into the face to produce the final talking-head video.
+### Public Inference Pipeline
 
-More details are available in `docs/architecture.md`.
+Reference media is processed with face detection and DWPose, then cropped and encoded into VAE latents. Whisper audio features condition MuseTalk UNet inference. Decoded frames are blended back into the face and composed with audio using FFmpeg.
 
-## Training
+The scripts support MuseTalk v1.0 and v1.5 model layouts and normal/realtime inference modes. These modes do not establish a measured realtime throughput result.
 
-```bash
-sh train.sh stage1
-sh train.sh stage2
-```
+## Results & Limitations
 
-`train.sh` launches `train.py` through Hugging Face Accelerate using `configs/training/accelerate.yaml` and the selected stage configuration (`stage1.yaml` or `stage2.yaml`).
+- End-to-end **MuseTalk v1.0 baseline inference** was validated in the project environment.
+- A Gradio demo supported inference execution and output preview.
+- One recorded baseline sample took approximately **seven hours** end to end; this is a single observation, not a general runtime benchmark.
+- The available records do not provide a quantitative baseline-versus-refined lip-synchronization comparison. A measured synchronization improvement is therefore not established.
+- Pretrained weights, datasets, generated media, and the complete original team environment are not included. The documented ADLip/SyncLT experiment cannot be fully reproduced from the current public repository.
 
-## Inference
+## Setup & Usage
 
-`inference.sh` supports MuseTalk v1.0 and v1.5 in both normal and realtime inference modes.
-
-```bash
-sh inference.sh v1.5 normal
-sh inference.sh v1.5 realtime
-```
-
-`inference.sh` selects the corresponding Python entry point and configuration: `scripts/inference.py` with `configs/inference/normal.yaml` for normal inference, or `scripts/realtime_inference.py` with `configs/inference/realtime.yaml` for realtime inference.
-
-## Web Demo
-
-```bash
-python app.py
-```
-
-The Gradio interface provides an end-to-end workflow for reference media and audio input, preprocessing, generation, and output preview.
-
-## Model Weights
-
-Pretrained model weights are not stored in the repository. Platform-specific download scripts are provided for Linux/macOS and Windows.
-
-Linux / macOS:
-
-```bash
-bash download_weights.sh
-```
-
-Windows:
-
-```bat
-download_weights.bat
-```
-
-## FFmpeg Check
-
-FFmpeg is required for video processing and audio-video composition. `check_ffmpeg.py` can be used to verify an FFmpeg installation or a custom FFmpeg binary directory.
-
-```bash
-python check_ffmpeg.py [ffmpeg-bin-path]
-```
-
-## Repository Structure (Key Files)
-
-```text
-audio-driven-talking-head-generation/
-├── app.py
-├── train.py
-├── check_ffmpeg.py
-├── requirements.txt
-├── train.sh
-├── inference.sh
-├── download_weights.sh
-├── download_weights.bat
-├── entrypoint.sh
-├── configs/
-│   ├── inference/
-│   │   ├── normal.yaml
-│   │   └── realtime.yaml
-│   └── training/
-│       ├── accelerate.yaml
-│       ├── preprocess.yaml
-│       ├── stage1.yaml
-│       ├── stage2.yaml
-│       └── syncnet.yaml
-├── scripts/
-│   ├── inference.py
-│   ├── preprocess.py
-│   └── realtime_inference.py
-├── musetalk/
-│   ├── data/
-│   ├── loss/
-│   ├── models/
-│   └── utils/
-│       ├── dwpose/
-│       ├── face_detection/
-│       ├── face_parsing/
-│       └── preprocessing.py
-└── docs/
-    ├── architecture.md
-    ├── demo.md
-    ├── experiments.md
-    └── images/
-        └── architecture.png
-```
-
-## Installation
+Install dependencies in a compatible Python/CUDA environment:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-FFmpeg is also required separately at the system level.
+FFmpeg must be installed separately. Pose/detection dependencies such as MMPose and MMDetection require compatible versions. The demo imports `moviepy.editor`, so it requires a MoviePy version that provides that module.
+
+Download external pretrained weights:
+
+```bash
+# Linux / macOS
+bash download_weights.sh
+```
+
+```bat
+:: Windows
+download_weights.bat
+```
+
+Check FFmpeg:
+
+```bash
+python check_ffmpeg.py
+# Alternatively: python check_ffmpeg.py /path/to/ffmpeg/bin
+```
+
+### Inference
+
+Update the media paths in [normal.yaml](configs/inference/normal.yaml) or [realtime.yaml](configs/inference/realtime.yaml) to your own files before running. The example media is not included.
+
+```bash
+bash inference.sh v1.0 normal
+bash inference.sh v1.5 normal
+bash inference.sh v1.5 realtime
+```
+
+### Web Demo
+
+```bash
+python app.py
+```
+
+For a custom FFmpeg installation, pass `--ffmpeg_path /path/to/ffmpeg/bin`. External model assets are required before launch.
+
+### Training
+
+Configure dataset, model, and checkpoint paths in the training YAML files for your environment before running:
+
+```bash
+bash train.sh stage1
+bash train.sh stage2
+```
+
+These scripts launch the public MuseTalk training code with Hugging Face Accelerate; they do not reproduce the documented ADLip/SyncLT extension.
+
+## Repository Guide
+
+| Path | Purpose |
+| --- | --- |
+| `app.py` | Gradio inference and output preview |
+| `train.py`, `train.sh` | MuseTalk training entry points |
+| `inference.sh`, `scripts/` | Inference and preprocessing |
+| `configs/` | Training, inference, and preprocessing settings |
+| `musetalk/` | Model, data, loss, and processing utilities |
+| `download_weights.sh`, `download_weights.bat` | External model download scripts |
+| `check_ffmpeg.py` | FFmpeg installation check |
+| `docs/` | Architecture, experiment, and demo documentation |
+
+Runtime media, model weights, datasets, and caches are excluded through `.gitignore`.
 
 ## Tech Stack
 
-`Python` `PyTorch` `MuseTalk` `Whisper` `SyncNet` `SyncLT` `Gradio` `OpenCV` `FFmpeg` `MMPose` `DWPose` `Hugging Face Transformers` `Accelerate`
+Python · PyTorch · MuseTalk · Whisper · SyncNet · Gradio · OpenCV · FFmpeg · DWPose · Hugging Face Transformers · Accelerate
 
-## Notes
+## Review
 
-- Model checkpoints, datasets, generated videos, uploaded media, caches, and other large runtime artifacts are excluded through `.gitignore`.
-- Reproducing training or inference requires the required pretrained model weights, a compatible CUDA/runtime environment, and system-level FFmpeg.
-- Pose and detection dependencies such as MMPose/MMDetection may require environment-specific version compatibility.
+This project provided experience integrating an existing generation framework into an inference and preview workflow. It also highlighted the need to distinguish architecture experiments from measured improvements and to document the assets required for reproduction.
