@@ -24,3 +24,4 @@ decord
 mmpose
 mmdet
 mmengine
+tqdm
