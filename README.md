@@ -12,10 +12,6 @@ The project first validated end-to-end MuseTalk v1.0 inference, then explored a 
 
 The public repository contains MuseTalk-based training, normal/realtime inference, preprocessing, SyncNet loss utilities, and the Gradio application. **The ADLip Generator and SyncLT extension are documented in the project architecture; their implementation is not included in the current public source tree.**
 
-## Individual Contribution
-
-My contribution focused on the **Python-based web demo** and **end-to-end inference integration** used to execute and review generated results. The lip-centric architecture is presented as team project work.
-
 ## Approach
 
 1. Validate the MuseTalk v1.0 baseline from reference media and speech audio to video output.
