@@ -1,5 +1,9 @@
 # Architecture
 
+## Documentation Scope
+
+This page describes the team project's lip-centric ADLip/SyncLT architecture. The current public source tree contains MuseTalk UNet training/inference and SyncNet utilities; the ADLip Generator and SyncLT extension implementation are not included. The diagram and objectives below should be read as project architecture documentation, rather than as a map of fully available public code.
+
 ## MuseTalk-Based Pipeline
 
 The project uses MuseTalk as the base for audio-driven talking-head generation. The end-to-end pipeline includes:
