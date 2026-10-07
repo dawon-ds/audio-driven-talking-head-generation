@@ -20,6 +20,3 @@ Result preview
 
 The current public repository documents the demo workflow but does not include the complete original team environment, pretrained checkpoints, large generated media, or external model assets.
 
-## Individual Contribution
-
-The repository owner was responsible for the **Python-based web demo** and for integrating the **end-to-end inference flow** used to execute and review generated results.
