@@ -35,15 +35,28 @@ Reference media is processed with face detection and DWPose, then cropped and en
 
 The scripts support MuseTalk v1.0 and v1.5 model layouts and normal/realtime inference modes. These modes do not establish a measured realtime throughput result.
 
-## Results & Limitations
+## Results
 
 - End-to-end **MuseTalk v1.0 baseline inference** was validated in the project environment.
 - A Gradio demo supported inference execution and output preview.
 - One recorded baseline sample took approximately **seven hours** end to end; this is a single observation, not a general runtime benchmark.
-- The available records do not provide a quantitative baseline-versus-refined lip-synchronization comparison. A measured synchronization improvement is therefore not established.
-- Pretrained weights, datasets, generated media, and the complete original team environment are not included. The documented ADLip/SyncLT experiment cannot be fully reproduced from the current public repository.
 
-## Setup & Usage
+## Repository Structure
+
+| Path | Purpose |
+| --- | --- |
+| `app.py` | Gradio inference and output preview |
+| `train.py`, `train.sh` | MuseTalk training entry points |
+| `inference.sh`, `scripts/` | Inference and preprocessing |
+| `configs/` | Training, inference, and preprocessing settings |
+| `musetalk/` | Model, data, loss, and processing utilities |
+| `download_weights.sh`, `download_weights.bat` | External model download scripts |
+| `check_ffmpeg.py` | FFmpeg installation check |
+| `docs/` | Architecture, experiment, and demo documentation |
+
+Runtime media, model weights, datasets, and caches are excluded through `.gitignore`.
+
+## Usage
 
 Install dependencies in a compatible Python/CUDA environment:
 
@@ -101,25 +114,15 @@ bash train.sh stage2
 
 These scripts launch the public MuseTalk training code with Hugging Face Accelerate; they do not reproduce the documented ADLip/SyncLT extension.
 
-## Repository Guide
+## Limitations
 
-| Path | Purpose |
-| --- | --- |
-| `app.py` | Gradio inference and output preview |
-| `train.py`, `train.sh` | MuseTalk training entry points |
-| `inference.sh`, `scripts/` | Inference and preprocessing |
-| `configs/` | Training, inference, and preprocessing settings |
-| `musetalk/` | Model, data, loss, and processing utilities |
-| `download_weights.sh`, `download_weights.bat` | External model download scripts |
-| `check_ffmpeg.py` | FFmpeg installation check |
-| `docs/` | Architecture, experiment, and demo documentation |
-
-Runtime media, model weights, datasets, and caches are excluded through `.gitignore`.
-
-## Tech Stack
-
-Python · PyTorch · MuseTalk · Whisper · SyncNet · Gradio · OpenCV · FFmpeg · DWPose · Hugging Face Transformers · Accelerate
+- The available records do not provide a quantitative baseline-versus-refined lip-synchronization comparison. A measured synchronization improvement is therefore not established.
+- Pretrained weights, datasets, generated media, and the complete original team environment are not included. The documented ADLip/SyncLT experiment cannot be fully reproduced from the current public repository.
 
 ## Review
 
 This project provided experience integrating an existing generation framework into an inference and preview workflow. It also highlighted the need to distinguish architecture experiments from measured improvements and to document the assets required for reproduction.
+
+## Tech Stack
+
+Python · PyTorch · MuseTalk · Whisper · SyncNet · Gradio · OpenCV · FFmpeg · DWPose · Hugging Face Transformers · Accelerate
