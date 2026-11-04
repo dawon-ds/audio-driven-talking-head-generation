@@ -55,3 +55,5 @@ uploads/
 # Temporary files
 temp.mp4
 *.pkl
+.env.*
+!.env.example
