@@ -2,7 +2,7 @@
 
 **Data Science Capstone Design · 2026**
 
-A team project exploring audio-driven talking-head generation with MuseTalk, lip-region latent refinement, and audio-visual synchronization supervision.
+A team project integrating **MuseTalk v1.0 baseline inference and a Gradio demo**, while exploring lip-region latent refinement and audio-visual synchronization supervision. Quantitative improvement from the proposed refinement was not established.
 
 [Portfolio](https://incredible-march-0ef.notion.site/98368564df5a83fc88b9010ae5496fb7) · [Architecture](docs/architecture.md) · [Experiments](docs/experiments.md) · [Web Demo](docs/demo.md)
 
