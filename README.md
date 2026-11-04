@@ -126,3 +126,10 @@ This project provided experience integrating an existing generation framework in
 ## Tech Stack
 
 Python · PyTorch · MuseTalk · Whisper · SyncNet · Gradio · OpenCV · FFmpeg · DWPose · Hugging Face Transformers · Accelerate
+
+## Data and Third-party Resources
+
+- **Upstream implementation:** [MuseTalk](https://github.com/TMElyralab/MuseTalk). Upstream copyright and dependency notices are preserved in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+- **Other assets:** Whisper, DWPose, VAE, face parsing, pretrained weights and input media have their own source licenses and usage restrictions. The presence of a download script does not establish permission to redistribute such assets.
+
+Dependency lists are in `requirements.txt`; unless versions are explicitly pinned there, they do not reproduce an exact historical software environment. No redistribution permission for third-party inputs is implied by this repository.
