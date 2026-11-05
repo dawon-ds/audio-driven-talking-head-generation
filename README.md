@@ -32,9 +32,21 @@ The scripts support MuseTalk v1.0 and v1.5 layouts and normal/realtime inference
 
 ## Results
 
-**ADLip Generator + SyncLT — qualitative generation example:** A project-provided demonstration takes a still portrait and speech audio as inputs and produces a talking-head video. The project contributor confirmed this demonstration was generated using the ADLip/SyncLT extension. The input portrait, audio clip, and resulting video have been supplied as project evidence but are **not yet hosted in this public repository**. This confirms a generated output example, **not** a measured improvement in lip synchronization.
+### ADLip Generator + SyncLT — Generation Sample
 
-**MuseTalk baseline:** End-to-end v1.0 inference and a Gradio inference/output-preview workflow were validated in the project environment. One recorded baseline sample took approximately **seven hours** end to end.
+A still portrait and speech audio were used to generate a talking-head video with the ADLip/SyncLT extension, as identified by the project contributor.
+
+| Input portrait | Generated talking-head video |
+| :---: | :---: |
+| ![Reference portrait](results/ref.webp) | [Watch generated video](results/result.mp4) |
+
+**Input audio:** [Listen / view audio input](results/audio.mp4) · **Generated output:** [Open video](results/result.mp4)
+
+This is a **qualitative generation example**, not evidence of a measured improvement in audio-visual synchronization. The extension's source code and trained weights are not included in the public repository.
+
+### MuseTalk Baseline
+
+End-to-end v1.0 inference and a Gradio inference/output-preview workflow were validated in the project environment. One recorded baseline sample took approximately **seven hours** end to end.
 
 ## Repository Structure
 
@@ -48,8 +60,9 @@ The scripts support MuseTalk v1.0 and v1.5 layouts and normal/realtime inference
 | `download_weights.sh`, `download_weights.bat` | External model download scripts |
 | `check_ffmpeg.py` | FFmpeg installation check |
 | `docs/` | Architecture, experiment, and demo documentation |
+| `results/` | Input image, input audio, and ADLip/SyncLT output video |
 
-Runtime media, model weights, datasets, and caches are excluded through `.gitignore`.
+The `results/` directory contains the publicly shared ADLip/SyncLT demonstration assets (portrait, audio input, and generated video). Model weights, datasets, other runtime media, and caches are excluded through `.gitignore`.
 
 ## Usage
 
@@ -112,7 +125,7 @@ These scripts launch the public MuseTalk training code with Hugging Face Acceler
 ## Limitations
 
 - An ADLip/SyncLT talking-head generation example is available, but no controlled baseline-versus-refined comparison establishes improved lip synchronization. The single recorded baseline runtime does not establish general throughput.
-- Pretrained weights, datasets, generated media, and the complete original team environment are not included. The documented ADLip/SyncLT experiment cannot be fully reproduced from the current public repository.
+- Pretrained weights, datasets, extension implementation, and the complete original team environment are not included. The provided demonstration media can be viewed, but the ADLip/SyncLT experiment cannot be fully reproduced from the current public repository.
 
 ## Review
 
