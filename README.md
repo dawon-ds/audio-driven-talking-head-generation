@@ -2,15 +2,16 @@
 
 **Data Science Capstone Design · 2026**
 
-A capstone project validating MuseTalk inference and exploring lip-region refinement for audio-visual synchronization.
+A MuseTalk-based talking-head generation project exploring speech-conditioned lip refinement and audio-visual synchronization.
 
 [Architecture](docs/architecture.md) · [Experiments](docs/experiments.md) · [Web Demo](docs/demo.md)
 
 ## Project Overview
 
-We validated MuseTalk v1.0 inference, connected media input and output preview through Gradio, and documented a proposed ADLip Generator / SyncLT extension for a **96×96 lip ROI**.
-
-The public repository contains MuseTalk-based training, normal/realtime inference, preprocessing, SyncNet loss utilities, and the Gradio application. **The ADLip Generator and SyncLT extension are documented in the project architecture; their implementation is not included in the current public source tree.**
+- **Baseline:** MuseTalk v1.0 end-to-end inference and Gradio preview
+- **Proposed extension:** ADLip Generator + SyncLT, operating on a **96×96 lip ROI**
+- **Public implementation:** MuseTalk training, preprocessing, normal/realtime inference, SyncNet utilities, and Gradio demo
+- **Availability:** The ADLip/SyncLT design is documented, but its source code and trained weights are not included in this repository.
 
 ## Approach
 
@@ -18,84 +19,61 @@ The public repository contains MuseTalk-based training, normal/realtime inferenc
 
 ![Lip-Centric Architecture](docs/images/architecture.png)
 
-The documented design encodes reference lip frames with a frozen VAE and audio with Whisper Tiny. The ADLip Generator combines spatial cross-attention, temporal attention, and feed-forward refinement to predict an audio-conditioned latent change:
+The documented extension uses a frozen VAE to encode reference lip frames and Whisper Tiny to extract audio features. The ADLip Generator combines spatial cross-attention, temporal attention, and feed-forward refinement to predict a residual latent change:
 
 `Z_out = Z_ref + αΔ`
 
-The objectives include latent reconstruction, same/different identity losses, delta regularization, and SyncLT contrastive supervision using matched and mismatched audio segments. See [architecture details](docs/architecture.md).
+The proposed training objectives include latent reconstruction, same/different identity losses, delta regularization, and SyncLT contrastive loss for matched and mismatched audio-video pairs. Further detail is in [architecture.md](docs/architecture.md).
 
-### Public Inference Pipeline
+### MuseTalk Inference Pipeline
 
-Reference media is processed with face detection and DWPose, then cropped and encoded into VAE latents. Whisper audio features condition MuseTalk UNet inference. Decoded frames are blended back into the face and composed with audio using FFmpeg.
+Reference media undergoes face detection, DWPose processing, cropping, and VAE encoding. Whisper audio features condition the MuseTalk UNet; decoded frames are blended with the reference face and combined with audio through FFmpeg.
 
-The scripts support MuseTalk v1.0 and v1.5 layouts and normal/realtime inference modes.
+The public scripts support MuseTalk v1.0/v1.5 layouts and normal/realtime inference modes.
 
 ## Results
 
 ### ADLip Generator + SyncLT — Generation Sample
 
-A still portrait and speech audio were used to generate a talking-head video with the ADLip/SyncLT extension, as identified by the project contributor.
+The project contributor identified the following **portrait + speech audio → talking-head video** sample as an ADLip/SyncLT output.
 
-| Input portrait | Generated talking-head video |
+| Input portrait | Generated video |
 | :---: | :---: |
-| ![Reference portrait](results/ref.webp) | [Watch generated video](results/result.mp4) |
+| ![Input portrait](results/ref.webp) | [Watch output](results/result.mp4) |
 
-**Input audio:** [Listen / view audio input](results/audio.mp4) · **Generated output:** [Open video](results/result.mp4)
-
-This is a **qualitative generation example**, not evidence of a measured improvement in audio-visual synchronization. The extension's source code and trained weights are not included in the public repository.
+[Input audio](results/audio.mp4) · [Generated video](results/result.mp4)
 
 ### MuseTalk Baseline
 
-End-to-end v1.0 inference and a Gradio inference/output-preview workflow were validated in the project environment. One recorded baseline sample took approximately **seven hours** end to end.
+End-to-end v1.0 inference and Gradio output preview were validated. One baseline sample took approximately **seven hours**; this is not a throughput benchmark.
 
 ## Repository Structure
 
 | Path | Purpose |
 | --- | --- |
-| `app.py` | Gradio inference and output preview |
-| `train.py`, `train.sh` | MuseTalk training entry points |
+| `app.py` | Gradio interface |
+| `train.py`, `train.sh` | Training entry points |
 | `inference.sh`, `scripts/` | Inference and preprocessing |
-| `configs/` | Training, inference, and preprocessing settings |
-| `musetalk/` | Model, data, loss, and processing utilities |
-| `download_weights.sh`, `download_weights.bat` | External model download scripts |
-| `check_ffmpeg.py` | FFmpeg installation check |
-| `docs/` | Architecture, experiment, and demo documentation |
-| `results/` | Input image, input audio, and ADLip/SyncLT output video |
-
-The `results/` directory contains the publicly shared ADLip/SyncLT demonstration assets (portrait, audio input, and generated video). Model weights, datasets, other runtime media, and caches are excluded through `.gitignore`.
+| `configs/` | Model and runtime settings |
+| `musetalk/` | Models and supporting utilities |
+| `download_weights.sh`, `download_weights.bat` | External weights setup |
+| `check_ffmpeg.py` | FFmpeg check |
+| `docs/` | Design and experiment documentation |
+| `results/` | Input image, audio, and generated video |
 
 ## Usage
 
-Install dependencies in a compatible Python/CUDA environment:
+Use a compatible Python/CUDA environment. FFmpeg must be installed separately; MMPose/MMDetection require compatible versions, and the Gradio app uses `moviepy.editor` (MoviePy 1.x interface).
 
 ```bash
 pip install -r requirements.txt
-```
-
-FFmpeg must be installed separately. Pose/detection dependencies such as MMPose and MMDetection require compatible versions. The demo imports `moviepy.editor`, so it requires a MoviePy version that provides that module.
-
-Download external pretrained weights:
-
-```bash
-# Linux / macOS
-bash download_weights.sh
-```
-
-```bat
-:: Windows
-download_weights.bat
-```
-
-Check FFmpeg:
-
-```bash
+bash download_weights.sh        # Linux/macOS; Windows: download_weights.bat
 python check_ffmpeg.py
-# Alternatively: python check_ffmpeg.py /path/to/ffmpeg/bin
 ```
 
 ### Inference
 
-Update the media paths in [normal.yaml](configs/inference/normal.yaml) or [realtime.yaml](configs/inference/realtime.yaml) to your own files before running. The example media is not included.
+Replace the sample media paths in [normal.yaml](configs/inference/normal.yaml) or [realtime.yaml](configs/inference/realtime.yaml) with locally available inputs.
 
 ```bash
 bash inference.sh v1.0 normal
@@ -109,35 +87,30 @@ bash inference.sh v1.5 realtime
 python app.py
 ```
 
-For a custom FFmpeg installation, pass `--ffmpeg_path /path/to/ffmpeg/bin`. External model assets are required before launch.
+For custom FFmpeg locations, use `--ffmpeg_path /path/to/ffmpeg/bin`.
 
 ### Training
 
-Configure dataset, model, and checkpoint paths in the training YAML files for your environment before running:
+Configure dataset and checkpoint paths in the training YAML files before running:
 
 ```bash
 bash train.sh stage1
 bash train.sh stage2
 ```
 
-These scripts launch the public MuseTalk training code with Hugging Face Accelerate; they do not reproduce the documented ADLip/SyncLT extension.
+These commands run the publicly available MuseTalk code, **not** the ADLip/SyncLT extension.
 
 ## Limitations
 
-- An ADLip/SyncLT talking-head generation example is available, but no controlled baseline-versus-refined comparison establishes improved lip synchronization. The single recorded baseline runtime does not establish general throughput.
-- Pretrained weights, datasets, extension implementation, and the complete original team environment are not included. The provided demonstration media can be viewed, but the ADLip/SyncLT experiment cannot be fully reproduced from the current public repository.
-
-## Review
-
-The project emphasized the difference between documenting an architectural extension and validating its effectiveness through controlled experiments.
+- The generation sample is qualitative; there is no controlled baseline comparison establishing improved lip synchronization.
+- The full training data, extension implementation, model weights, and original team environment are unavailable here, so the ADLip/SyncLT result cannot be reproduced from this repository alone.
 
 ## Tech Stack
 
 Python · PyTorch · MuseTalk · Whisper · SyncNet · Gradio · OpenCV · FFmpeg · DWPose · Hugging Face Transformers · Accelerate
 
-## Data and Third-party Resources
+## Data and Third-Party Resources
 
-- **Upstream implementation:** [MuseTalk](https://github.com/TMElyralab/MuseTalk). Upstream copyright and dependency notices are preserved in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
-- **Other assets:** Whisper, DWPose, VAE, face parsing, pretrained weights and input media have their own source licenses and usage restrictions. The presence of a download script does not establish permission to redistribute such assets.
-
-Dependency lists are in `requirements.txt`; unless versions are explicitly pinned there, they do not reproduce an exact historical software environment. No redistribution permission for third-party inputs is implied by this repository.
+- [MuseTalk upstream](https://github.com/TMElyralab/MuseTalk) and the preserved [third-party notices](THIRD_PARTY_LICENSES.md)
+- External media, models, and pretrained weights remain subject to their respective licenses. No redistribution rights are implied.
+- Dependencies are listed in `requirements.txt`; unpinned versions do not guarantee the original environment.
