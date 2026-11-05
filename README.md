@@ -2,22 +2,17 @@
 
 **Data Science Capstone Design · 2026**
 
-A team project integrating **MuseTalk v1.0 baseline inference and a Gradio demo**, while exploring lip-region latent refinement and audio-visual synchronization supervision. Quantitative improvement from the proposed refinement was not established.
+A capstone project validating MuseTalk inference and exploring lip-region refinement for audio-visual synchronization.
 
 [Architecture](docs/architecture.md) · [Experiments](docs/experiments.md) · [Web Demo](docs/demo.md)
 
 ## Project Overview
 
-The project first validated end-to-end MuseTalk v1.0 inference, then explored a lip-centric architecture using an ADLip Generator and SyncLT supervision within a **96×96 lip ROI**. A Python-based Gradio demo connected media input, inference, and output preview.
+We validated MuseTalk v1.0 inference, connected media input and output preview through Gradio, and documented a proposed ADLip Generator / SyncLT extension for a **96×96 lip ROI**.
 
 The public repository contains MuseTalk-based training, normal/realtime inference, preprocessing, SyncNet loss utilities, and the Gradio application. **The ADLip Generator and SyncLT extension are documented in the project architecture; their implementation is not included in the current public source tree.**
 
 ## Approach
-
-1. Validate the MuseTalk v1.0 baseline from reference media and speech audio to video output.
-2. Explore localized lip refinement to condition the reference representation on speech.
-3. Use synchronization supervision to examine audio-visual alignment.
-4. Connect inference and output preview through a Gradio interface.
 
 ### Lip-Centric Architecture
 
@@ -33,13 +28,13 @@ The objectives include latent reconstruction, same/different identity losses, de
 
 Reference media is processed with face detection and DWPose, then cropped and encoded into VAE latents. Whisper audio features condition MuseTalk UNet inference. Decoded frames are blended back into the face and composed with audio using FFmpeg.
 
-The scripts support MuseTalk v1.0 and v1.5 model layouts and normal/realtime inference modes. These modes do not establish a measured realtime throughput result.
+The scripts support MuseTalk v1.0 and v1.5 layouts and normal/realtime inference modes.
 
 ## Results
 
 - End-to-end **MuseTalk v1.0 baseline inference** was validated in the project environment.
 - A Gradio demo supported inference execution and output preview.
-- One recorded baseline sample took approximately **seven hours** end to end; this is a single observation, not a general runtime benchmark.
+- One recorded baseline sample took approximately **seven hours** end to end.
 
 ## Repository Structure
 
@@ -116,12 +111,12 @@ These scripts launch the public MuseTalk training code with Hugging Face Acceler
 
 ## Limitations
 
-- The available records do not provide a quantitative baseline-versus-refined lip-synchronization comparison. A measured synchronization improvement is therefore not established.
+- There is no controlled baseline-versus-refined comparison establishing improved lip synchronization. The single recorded runtime does not establish general throughput.
 - Pretrained weights, datasets, generated media, and the complete original team environment are not included. The documented ADLip/SyncLT experiment cannot be fully reproduced from the current public repository.
 
 ## Review
 
-This project provided experience integrating an existing generation framework into an inference and preview workflow. It also highlighted the need to distinguish architecture experiments from measured improvements and to document the assets required for reproduction.
+The project emphasized the difference between documenting an architectural extension and validating its effectiveness through controlled experiments.
 
 ## Tech Stack
 
