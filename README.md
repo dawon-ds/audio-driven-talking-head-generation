@@ -35,13 +35,18 @@ The public scripts support MuseTalk v1.0/v1.5 layouts and normal/realtime infere
 
 ### ADLip Generator + SyncLT — Generation Sample
 
-The project contributor identified the following **portrait + speech audio → talking-head video** sample as an ADLip/SyncLT output.
+**Input:** Still portrait + [speech audio](results/audio.mp4) · **Output:** ADLip/SyncLT talking-head video
 
-| Input portrait | Generated video |
-| :---: | :---: |
-| ![Input portrait](results/ref.webp) | [Watch output](results/result.mp4) |
-
-[Input audio](results/audio.mp4) · [Generated video](results/result.mp4)
+<table>
+  <tr>
+    <th width="50%" align="center">Input portrait</th>
+    <th width="50%" align="center">Generated video</th>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><img src="results/ref.webp" width="180" alt="Input portrait"></td>
+    <td width="50%" align="center"><a href="results/result.mp4">▶ Watch generated video</a></td>
+  </tr>
+</table>
 
 ### MuseTalk Baseline
 
