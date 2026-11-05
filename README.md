@@ -102,7 +102,8 @@ These commands run the publicly available MuseTalk code, **not** the ADLip/SyncL
 
 ## Limitations
 
-- The generation sample is qualitative; there is no controlled baseline comparison establishing improved lip synchronization.
+- The generated video still needs improvement in visual naturalness and speech-related motion, and no controlled baseline comparison establishes a synchronization gain.
+- The project's main value is exploring the ADLip Generator and SyncLT-based synchronization approach and producing a generation sample, rather than demonstrating polished video quality.
 - The full training data, extension implementation, model weights, and original team environment are unavailable here, so the ADLip/SyncLT result cannot be reproduced from this repository alone.
 
 ## Tech Stack
