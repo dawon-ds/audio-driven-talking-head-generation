@@ -32,9 +32,9 @@ The scripts support MuseTalk v1.0 and v1.5 layouts and normal/realtime inference
 
 ## Results
 
-- End-to-end **MuseTalk v1.0 baseline inference** was validated in the project environment.
-- A Gradio demo supported inference execution and output preview.
-- One recorded baseline sample took approximately **seven hours** end to end.
+**ADLip Generator + SyncLT — qualitative generation example:** A project-provided demonstration takes a still portrait and speech audio as inputs and produces a talking-head video. The project contributor confirmed this demonstration was generated using the ADLip/SyncLT extension. The input portrait, audio clip, and resulting video have been supplied as project evidence but are **not yet hosted in this public repository**. This confirms a generated output example, **not** a measured improvement in lip synchronization.
+
+**MuseTalk baseline:** End-to-end v1.0 inference and a Gradio inference/output-preview workflow were validated in the project environment. One recorded baseline sample took approximately **seven hours** end to end.
 
 ## Repository Structure
 
@@ -111,7 +111,7 @@ These scripts launch the public MuseTalk training code with Hugging Face Acceler
 
 ## Limitations
 
-- There is no controlled baseline-versus-refined comparison establishing improved lip synchronization. The single recorded runtime does not establish general throughput.
+- An ADLip/SyncLT talking-head generation example is available, but no controlled baseline-versus-refined comparison establishes improved lip synchronization. The single recorded baseline runtime does not establish general throughput.
 - Pretrained weights, datasets, generated media, and the complete original team environment are not included. The documented ADLip/SyncLT experiment cannot be fully reproduced from the current public repository.
 
 ## Review
